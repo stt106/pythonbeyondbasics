@@ -147,8 +147,10 @@ def some_fun(a, b, c):
 def main():
      resolver = Resolver()
      # the instance object is callable due to __call__ definition
-     #print(resolver('pluralsight.com'))
+     print(resolver('pluralsight.com'))
+     print(resolver('bbc.com'))
 
+     
      # local function
      print(sort_with_local("hello from local function"))
 
