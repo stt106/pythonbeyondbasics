@@ -9,7 +9,7 @@
     Local functions are also executed at runtime and each separate outer function call will create a new local function object. Local functions are simply objects created with the outer function scope but it has no relation to the outer function itself. It follows the LEGB rule and any variables used within local function are searched from itself, outer function and global scope. 
     Local functions are useful for specialized, one-off functions, aidding for code organisation and readability. Unlike lambda, it can contain multiple statements and expressions. 
 
-    Local functions can use and bind objects that're no longer exist through closure which essentailly remembers the objects from the enclosing scope that the local function needs. It effectively prevent those object being garbage collected. If a function closes over any objects, the net function has __closure__ attribute which maintains.
+    Local functions can use and bind objects that're no longer exist through closure which essentailly remembers the objects from the enclosing scope that the local function needs. It effectively prevent those objects being garbage collected. If a function closes over any objects, the net function has __closure__ attribute which maintains.
 
 
     Decorators are callable objects that take in a callable and returns a callable. Decorators can modify or enhance functions without changing their definition.  
@@ -17,7 +17,7 @@
     Similarly, instance decorators are done through the __call__().
     Multiple decorators can be applied to a single function and they will be applied in a reverse order.
 
-    Naive decorators can lose important metadata s.a. __name__ attribute. 
+    Naive decorators can lose important metadata s.a. __name__ attribute. Use functools.wraps(fun) to maintain the metadata of decorated functions. 
 """
 
 import socket
@@ -27,7 +27,7 @@ class Resolver:
         self._cache = {}
     
 
-    def __call__(self, host):
+    def __call__(self, host): # this enables an instance callable e.g. resolver(host)
         if host not in self._cache:
             self._cache[host] = socket.gethostbyname(host)
         return self._cache[host]
@@ -44,17 +44,18 @@ class Resolver:
 def sort_with_local(strings):
     def last_letter(s):
         return s[-1]
-    return sorted(strings.split(), key = last_letter)
+    return sorted(strings.split(), key = last_letter) # key is of type callable 
 
 
 
 def simple_closure():
+    # this is the object that is closed over and won't be GCed when simple_closure out of scope  
     x = 'closed over'
     def inner():
         print(x)
-    return inner
+    return inner 
 
-
+# using closure as function factory (partial application)
 def raise_to(exp):
     return lambda x: pow(x,exp)
 
@@ -64,15 +65,16 @@ import time
 def make_timer():
     last_call = None
     def elapsed():
-        nonlocal last_call
+        nonlocal last_call # if last_call doesn't exist in the enclosing scope this throws exception
         now = time.time()
         if last_call is None:
             last_call = now
-            return None
+            return None 
         result = now - last_call
         last_call = now
         return result
     return elapsed
+
 
 import functools
 # decorators creates a function object with the decorated function and pass it to the decorator function then returns a new function object which is bounded back to the decorated function!  
@@ -92,8 +94,8 @@ class CallCount:
         self.count = 0
         self.thisIsAvialbeToo = {1 : 'one', 2 : 'two'}
     
-
-    def __call__(self, *args, **kwargs):
+    # this ensures the decorated function can take any number of arguments
+    def __call__(self, *args, **kwargs): 
         self.count += 1
         return self.f(*args, **kwargs)
 
@@ -124,7 +126,7 @@ tracer = Tracer()
 def rotate_list(l):
     return l[1:] + [l[0]]
 
-
+# using decorator to validate function arguments
 # this is NOT a decorator itself but it returns a closure as a decorator
 def non_negative_list(index):
     def validator(f):
@@ -164,7 +166,7 @@ def main():
 
 
      # useage of nonlocal
-     t1 = make_timer()
+     t1 = make_timer() # better demoed in REPL 
      #print(t1())
      #print(t1())
 
