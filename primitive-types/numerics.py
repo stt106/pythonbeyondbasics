@@ -86,14 +86,80 @@ print(is_odd_float(Decimal('-7.0')))
 print(-7 // 3) # -3
 print(Decimal(-7) // Decimal(3)) # -2
 
+
+# math module doesn't support decimal but decimal type provides some common used operations
+print(Decimal('0.81').sqrt())
+
 # so float can only represent c*2**n e.g. 8.0 = 8 = 2**3and decimal can only represent c*10**n where c is an int factor. But some irrational numbers cannot be represented by either binary or decimal format e.g. 2/3
 
 from fractions import Fraction
 f1 = Fraction(2, 3)
 print(f1)
+
 f2 = Fraction(239548234) # fractions from integer with 1 being denominator
 print(f2)
-f3 = Fraction(0.5)
+
+f3 = Fraction(0.5) # 0.5 can be represented exactly in binary format 
 print(f3)
+
 f4 = Fraction(0.1) 
 print(f4) # since 0.1 cannot be exactly represented using binary format
+
+f5 = Fraction(Decimal('0.1')) # fraction supports decimals which will get better reseult than float.
+print(f5) 
+
+f6 = Fraction('6/19') # fraction from string
+print(f6)
+
+# arithemic with fractions
+print(f5 + f6)
+print(f1 - f2)
+print(f4 % f3) # = f4
+print(f4 // f6)
+
+# fractions only work on floor and ceiling functions on the math module; other functions don't make sense to work with fractions
+import math
+print(math.floor(Fraction(4, 3)))
+print(math.ceil(Fraction(3, 4)))
+
+# python supports complex with built-in support
+i1 = 3 + 4j # special syntax for complex number
+i2 = 4 + 5j
+print(i1)
+print(type(i2)) # type of complex
+print(complex(2, 4)) # use ctor 
+print(complex('-3+5j')) # use string within the ctor; note cannot contain any white space within the string 
+
+# operations on complex type
+print(i2.real)
+print(i1.imag)
+print(i2.conjugate())
+
+# cmath module for complex numbers
+import cmath
+print(cmath.sqrt(-1))
+print(cmath.phase(i2)) # also knowns as the argument (angle between x and the line)
+print(abs(i1)) # get the magnitude or modulus 
+modulus, phase = cmath.polar(i2) # tuple unpacking 
+print(modulus, phase)
+print(cmath.rect(modulus, phase)) # subject to rounding error to convert back to complex number 
+print(math.degrees(phase)) # convert radius to degrees.
+
+abs(-4) # the distance from 0 for all the numeric types
+print(round(1.5)) # 2; up to even number by default
+print(round(2.5)) # 2;
+
+# surprising result for float which cannot be represented exactly
+print(round(2.675, 2)) # 2.67
+print(round(Decimal('2.675'), 2)) # the solution is to use decimal
+
+
+"""Number base conversion"""
+bn = 0b101010
+on = 0o52
+hn = 0x2a
+bn2 = bin(42) # convert back to binary
+on2 = oct(42) # convert back to oct
+hn2 = hex(42) # convert back to hex 
+# int ctor accepts an optional base from 2 to 36; the digits can be a combination of 0-9 and a-z. Default to base = 10; base 1 is NOT supported.
+print(int('abf', base = 16))
