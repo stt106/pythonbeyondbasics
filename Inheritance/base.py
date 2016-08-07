@@ -1,5 +1,5 @@
 """
-1. Subclass doesn't auto call base class __init__(). If subclass doesn't fine init() then base class init() will be called when a subclass instance is initialised.
+1. Subclass doesn't auto call base class __init__(). If subclass doesn't define init() then base class init() will be called when a subclass instance is initialised.
 
 """
 
