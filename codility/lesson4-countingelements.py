@@ -30,13 +30,19 @@ def frogriverone(X, A):
 
 def maxcounter(N, A):
     res = [0] * N
-    currentmax = 0
+    current_max = 0
+    max_counter = 0
     for i in A:
         if i >=1 and i <= N:
+            res[i-1] = max(max_counter, res[i-1])
             res[i-1] += 1
-            currentmax = max(currentmax, res[i-1])
+            current_max = max(current_max, res[i-1])
         elif i == N + 1:
-            res = [currentmax] * N
+            max_counter = current_max
+    
+    for j in range(N):
+        res[j] = max(res[j], max_counter)
+
     return res
 
 print(maxcounter(5, [3,4, 4, 6, 1, 4, 4])) 
